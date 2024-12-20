@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Menu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #ff6347;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+        header h1 {
+            margin: 0;
+        }
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .menu-item {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .menu-item:hover {
+            transform: translateY(-10px);
+        }
+        .menu-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .menu-item h3 {
+            margin-top: 10px;
+            font-size: 1.5em;
+            color: #ff6347;
+        }
+        .menu-item p {
+            font-size: 1em;
+            color: #333;
+        }
+        .menu-item .price {
+            font-size: 1.2em;
+            color: #28a745;
+            margin: 10px 0;
+        }
+        .menu-item .add-to-cart {
+            background-color: #ff6347;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .menu-item .add-to-cart:hover {
+            background-color: #e55347;
+        }
+        .order-summary {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+        .order-summary ul {
+            list-style: none;
+            padding: 0;
+        }
+        .order-summary li {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .order-summary .remove-item {
+            color: #e55347;
+            cursor: pointer;
+        }
+        .order-summary .remove-item:hover {
+            color: #ff6347;
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+        .footer a {
+            color: #ff6347;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Style the Proceed to Checkout button with a box */
+        .checkout-btn {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 8px 16px;  /* Keeps the button small */
+            font-size: 1em;
+            border: 2px solid #28a745;  /* Adds a border around the button */
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            margin-top: 20px;
+            text-decoration: none;
+        }
+
+        /* Hover effect for button */
+        .checkout-btn:hover {
+            background-color: #218838;
+            border-color: #218838;  /* Changes the border color on hover */
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Pizza Menu</h1>
+</header>
+
+<div class="menu">
+    <div class="menu-item">
+        <img src="C:\Users\G9Yz\Desktop\42\coding-for-all-web-dec-2024-G9YzNDN\discovery_piscine\rush\images\Hawaii.jpg" alt="Hawaiian Pizza">
+        <h3>Hawaiian Pizza</h3>
+        <p>Ham, Pineapple, Cheese.</p>
+        <div class="price">$10.99</div>
+        <button class="add-to-cart" data-pizza="Hawaiian Pizza" data-price="10.99">Add to Cart</button>
+    </div>
+    <div class="menu-item">
+        <img src="C:\Users\G9Yz\Desktop\42\coding-for-all-web-dec-2024-G9YzNDN\discovery_piscine\rush\images\Pep.jpg" alt="Pepperoni Pizza">
+        <h3>Pepperoni Pizza</h3>
+        <p>Pepperoni, Tomato sauce, Cheese.</p>
+        <div class="price">$11.99</div>
+        <button class="add-to-cart" data-pizza="Pepperoni Pizza" data-price="11.99">Add to Cart</button>
+    </div>
+    <div class="menu-item">
+        <img src="C:\Users\G9Yz\Desktop\42\coding-for-all-web-dec-2024-G9YzNDN\discovery_piscine\rush\images\Cheese.jpg" alt="Cheese Pizza">
+        <h3>Cheese Pizza</h3>
+        <p>Classic Mozzarella Cheese.</p>
+        <div class="price">$8.99</div>
+        <button class="add-to-cart" data-pizza="Cheese Pizza" data-price="8.99">Add to Cart</button>
+    </div>
+</div>
+
+<div class="order-summary">
+    <h2>Your Order</h2>
+    <ul id="order-list">
+        <!-- Dynamically populated order list will appear here -->
+    </ul>
+    <div class="total-cost" id="total-cost">
+        Total: $0.00
+    </div>
+    <a href="order.html" class="checkout-btn">Proceed to Checkout</a>
+</div>
+
+<div class="footer">
+    <p>Order online and take your order at ITKMITL.</p>
+</div>
+
+<script>
+    const orderList = document.getElementById('order-list');
+    const totalCostElement = document.getElementById('total-cost');
+    let totalCost = 0;
+    let order = JSON.parse(localStorage.getItem('order')) || [];
+
+    function updateOrderList() {
+        orderList.innerHTML = '';
+        totalCost = 0;
+        order.forEach((item, index) => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+                ${item.pizzaName} - $${item.pizzaPrice.toFixed(2)} 
+                <span class="remove-item" data-index="${index}">✖</span>
+            `;
+            orderList.appendChild(listItem);
+            totalCost += item.pizzaPrice;
+        });
+        totalCostElement.textContent = `Total: $${totalCost.toFixed(2)}`;
+    }
+
+    function addToOrder(pizzaName, pizzaPrice) {
+        order.push({ pizzaName, pizzaPrice });
+        localStorage.setItem('order', JSON.stringify(order));
+        updateOrderList();
+    }
+
+    function removeFromOrder(index) {
+        order.splice(index, 1);
+        localStorage.setItem('order', JSON.stringify(order));
+        updateOrderList();
+    }
+
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', () => {
+            const pizzaName = button.getAttribute('data-pizza');
+            const pizzaPrice = parseFloat(button.getAttribute('data-price'));
+            addToOrder(pizzaName, pizzaPrice);
+        });
+    });
+
+    orderList.addEventListener('click', (event) => {
+        if (event.target.classList.contains('remove-item')) {
+            const index = event.target.getAttribute('data-index');
+            removeFromOrder(index);
+        }
+    });
+
+    updateOrderList(); // Initial order list update
+</script>
+
+</body>
+</html>

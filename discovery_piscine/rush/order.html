@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #ff6347;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+        header h1 {
+            margin: 0;
+        }
+        .order-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+        .order-form h2 {
+            text-align: center;
+            color: #333;
+        }
+        .ordered-items ul {
+            list-style: none;
+            padding: 0;
+        }
+        .ordered-items li {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+        .total-cost {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: right;
+            color: #28a745;
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+        .footer a {
+            color: #ff6347;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        /* Go Back Button Style */
+        .go-back-btn {
+            display: inline-block;
+            background-color: #ff6347;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+        .go-back-btn:hover {
+            background-color: #48af59;
+        }
+        /* Submit Button with Box around it */
+        button[type="submit"] {
+            display: inline-block;
+            background-color: #48af59;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: 2px solid #48af59;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border 0.3s ease;
+            margin-top: 10px;
+        }
+        button[type="submit"]:hover {
+            background-color: #48af59;
+            border-color: #48af59;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Checkout</h1>
+</header>
+
+<div class="order-form">
+    <h2>Your Order</h2>
+
+    <div class="ordered-items">
+        <ul id="order-list">
+            <!-- Dynamically populated order list will appear here -->
+        </ul>
+        <div class="total-cost" id="total-cost">
+            Total: $0.00
+        </div>
+    </div>
+    
+    <!-- Customer info form -->
+    <form id="order-form">
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" required>
+
+        <!-- Submit Button with Box -->
+        <button type="submit">Submit Order</button>
+    </form>
+
+    <!-- Go Back Button -->
+    <a href="index.html" class="go-back-btn">Go Back to Menu</a>
+</div>
+
+<div class="footer">
+    <p>Order online and take your order at ITKMITL.</p>
+</div>
+
+<script>
+    const order = JSON.parse(localStorage.getItem('order')) || [];
+    const orderList = document.getElementById('order-list');
+    const totalCostElement = document.getElementById('total-cost');
+    let totalCost = 0;
+
+    // Function to update the order list and total cost
+    function updateOrderList() {
+        orderList.innerHTML = '';
+        totalCost = 0;
+        order.forEach(item => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${item.pizzaName} - $${item.pizzaPrice.toFixed(2)}`;
+            orderList.appendChild(listItem);
+            totalCost += item.pizzaPrice;
+        });
+        totalCostElement.textContent = `Total: $${totalCost.toFixed(2)}`;
+    }
+
+    updateOrderList(); // Initial order list update
+
+    // Handling form submission
+    document.getElementById('order-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        // Show alert when the order is submitted
+        alert('Your order has been submitted!');
+
+        // Clear the order from local storage
+        localStorage.removeItem('order');
+
+        // Clear the order list and total cost from the page
+        orderList.innerHTML = '';
+        totalCostElement.textContent = 'Total: $0.00';
+
+        // Optionally, clear the form fields
+        document.getElementById('order-form').reset();
+    });
+</script>
+
+</body>
+</html>
